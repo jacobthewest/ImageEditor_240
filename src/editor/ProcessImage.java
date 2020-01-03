@@ -10,65 +10,54 @@ import java.nio.file.Path;
 import java.nio.file.FileAlreadyExistsException;
 import java.lang.Number;
 import java.lang.Integer;
+import java.lang.StringBuilder;
 import java.util.regex.*;
 
 import editor.Pixel;
 
 public class ProcessImage {
-    // Note: The pixels are in row-major order. That is the first n values (where n = width) represent
-    // the first row of the image, the 2nd n values represent the 2nd row, and so forth.
-    private int[][] red_m;
-    private int[][] green_m;
-    private int[][] blue_m;
-    private Pixel[][] importedImageAsArray;
+    private Pixel[][] importedImageAsArray_m;
 
     private int maxColorValue_m; // This value will always become 255
     private int width_m;
     private int height_m;
 
-    private void createNewImage(Scanner scanner) {
-
-        //int stuff = Integer.parseInt(getNext(scanner));
-        //System.out.println(stuff);
-
-        // for (int row = 0; row < height_m; row++) {
-        //   for (int column = 0; column < width_m; column++) {
-        //     //red_m[column][row] = Integer.parseInt(getNext(scanner));
-        //     System.out.println("Red: " + this.red_m);
-        //     //green_m[column][row] = Integer.parseInt(getNext(scanner));
-        //     System.out.println("Green: " + this.green_m);
-        //     //blue_m[column][row] = Integer.parseInt(getNext(scanner));
-        //     System.out.println("Blue: " + this.blue_m);
-        //   }
-        // }
-    }
-
-    public void outputFile(String outputFileName) {
+    public void writeToOutputFile(String outputFileName, ProcessImage importedImage, Pixel[][] modifiedPixelArray) {
         try {
-            // Path outputFilePath = Paths.get(outputFileName); // Creat an output file path
-            // PrintWriter output = new PrintWriter(Files.newBufferedWriter(outputFilePath, StandardCharsets.US_ASCII));
-            //   // Make it so we can write to this output file
+            // Find the correct capacity that we need for our string builder.
+            int capacity = 100 * importedImage.getHeight() * importedImage.getWidth(); // We use 100 just to be safe.
 
-            // // When we are printing we are going to follow the same process that we did to get the data
-            // output.println("P6");
-            // output.println(" ");
-            // output.println(this.width_m);
-            // output.println(" ");
-            // output.println(this.height_m);
-            // output.println(" ");
-            // output.println(this.maximumColorValue_m);
+            StringBuilder output = new StringBuilder(capacity);
 
-            // // Now we are outputting the pixels
-            // for(int row = 0; row < this.height_m; row++) {
-            //   for(int column = 0; column< this.width_m; column++) {
-            //     output.println(this.red_m[column][row]);
-            //     output.println(this.green_m[column][row]);
-            //     output.println(this.blue_m[column][row]);
-            //   }
-            // }
+            String new_line = System.getProperty("line.separator");
 
-            // output.close();
+            output.append("P3" + new_line);
+            output.append(importedImage.getWidth());
+            output.append(" ");
+            output.append(importedImage.getHeight() + new_line);
 
+            System.out.println("hEre is the max color: " + importedImage.getMaxColorValue());
+
+
+            for(int row = 0; row < this.height_m; row++) {
+                for(int col = 0; col < this.width_m; col++) {
+                    output.append(modifiedPixelArray[row][col].getRed());
+                    output.append(" ");
+                    output.append(modifiedPixelArray[row][col].getGreen());
+                    output.append(" ");
+                    output.append(modifiedPixelArray[row][col].getBlue());
+                    output.append(" ");
+                }
+            }
+            output.append(" ");
+
+            System.out.println(output);
+
+            // Write to the file
+            FileWriter fileWriter = new FileWriter(outputFileName);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            fileWriter.append(output); // This writes to the file
+            fileWriter.close();
         }
         catch(Exception e) {
             //System.out.println(e);
@@ -171,7 +160,7 @@ public class ProcessImage {
     private void processPixels(Scanner scanner) {
         // Pixels ::= (Pixel (Separator Pixel)* )?
 
-        importedImageAsArray = new Pixel[this.height_m][this.width_m];
+        this.importedImageAsArray_m = new Pixel[this.height_m][this.width_m];
 
         try {
             for (int row = 0; row < this.height_m; row++) {
@@ -206,27 +195,42 @@ public class ProcessImage {
         }
         catch(NoSuchElementException ignored) {}
 
-        System.out.println("Red: " + tempRedInt + " Green: " + tempGreenInt + " Blue: " + tempBlueInt);
+        this.importedImageAsArray_m[row][col] = new Pixel(tempRedInt, tempGreenInt, tempBlueInt);
 
-        this.importedImageAsArray[row][col] = new Pixel(tempRedInt, tempGreenInt, tempBlueInt);
-
-    }
-
-    private void processRedColorValue(Scanner scanner) {
-        // RedColorValue ::= Number
-    }
-
-    private void processGreenColorValue(Scanner scanner) {
-        // GreenColorValue ::= Number
-    }
-
-    private void processBlueColorValue(Scanner scanner) {
-        // BlueColorValue ::= Number
     }
 
     private void processMaxColorValue(Scanner scanner) {
         // MaxColorValue ::= 255
         this.maxColorValue_m = Integer.parseInt(scanner.next());
+    }
+
+    public int getWidth() {
+        return this.width_m;
+    }
+
+    public int getHeight() {
+        return this.height_m;
+    }
+
+    public int getMaxColorValue() {
+        return  this.maxColorValue_m;
+    }
+
+    public Pixel[][] getPixelArray() {
+        return this.importedImageAsArray_m;
+    }
+
+    public Pixel[][] invert (ProcessImage importedImage) {
+        int num_cols = importedImage.getWidth();
+        int num_rows = importedImage.getHeight();
+        Pixel[][] modifyThesePixels = importedImage.getPixelArray();
+
+        for(int row = 0; row < num_rows; row++) {
+            for(int col = 0; col < num_cols; col++) {
+                modifyThesePixels[row][col].invert();
+            }
+        }
+        return modifyThesePixels;
     }
 
     // Constructor
@@ -236,29 +240,15 @@ public class ProcessImage {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             Scanner scanner = new Scanner(bufferedReader);
             scanner.useDelimiter("(\\s+)(#[^\\n]*\\n)?(\\s*)|(#[^\\n]*\\n)(\\s*)");
-                //^^ Used to ignore Separators
+            //^^ Used to ignore Separators
 
             //PPM_File ::= Header Pixels Separator*
-               // Remember that * means zero or more times
+            // Remember that * means zero or more times
             processHeader(scanner);
             processPixels(scanner);
-            scanner.close();
-            // Handle potential Separator
+            scanner.close(); // This handles the Separator*
 
 
-            // scanner.next(); // Get past the MagicNumber 'P6' //
-
-            // Set the private class variables
-            // width_m = Integer.parseInt(getNext(scanner));
-            // height_m = Integer.parseInt(getNext(scanner));
-            // System.out.println("height" + height_m);
-            // System.out.println("width" + width_m);
-            //maximumColorValue_m = Integer.parseInt(getNext(scanner)); // maximumColorValue will always be 255
-            // red_m = new int[width_m][height_m];
-            // green_m = new int[width_m][height_m];
-            // blue_m = new int[width_m][height_m];
-
-            //createNewImage(scanner);
         }
         catch(Exception e) {
             System.out.println(e);

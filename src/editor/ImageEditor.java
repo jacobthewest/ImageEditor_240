@@ -21,13 +21,14 @@ public class ImageEditor {
             String INPUT_FILE_NAME = args[0];
             String OUTPUT_FILE_NAME = args[1];
 
-            ProcessImage newImage = new ProcessImage(INPUT_FILE_NAME);
+            ProcessImage importedImage = new ProcessImage(INPUT_FILE_NAME);
 
-            //newImage.writeToOutputFile(OUTPUT_FILE_NAME);
+
             // What action wants to be performed
             switch(args[2].toUpperCase()) {
                 case "INVERT":
-                    //ProcessImage inverted_image = new ProcessImage(INPUT_FILE_NAME);
+                    Pixel[][] invertedPixelArray = importedImage.invert(importedImage);
+                    importedImage.writeToOutputFile(OUTPUT_FILE_NAME, importedImage, invertedPixelArray);
                     break;
                 case "GRAYSCALE":
                     break;
