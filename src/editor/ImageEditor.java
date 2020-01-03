@@ -12,6 +12,8 @@ import java.lang.Number;
 import java.lang.Integer;
 import java.util.regex.*;
 
+import editor.ProcessImage;
+
 public class ImageEditor {
 	public static void main(String args[]) {
         // Command example to run the program "java ImageEditor bike.ppm bike-inverted.ppm invert"
