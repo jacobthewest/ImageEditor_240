@@ -35,9 +35,10 @@ public class ProcessImage {
             output.append(importedImage.getWidth());
             output.append(" ");
             output.append(importedImage.getHeight() + new_line);
+            output.append(importedImage.getMaxColorValue() + new_line);
 
-            System.out.println("hEre is the max color: " + importedImage.getMaxColorValue());
 
+            //System.out.println("Here is what we have so far: " + output.toString());
 
             for(int row = 0; row < this.height_m; row++) {
                 for(int col = 0; col < this.width_m; col++) {
@@ -51,7 +52,7 @@ public class ProcessImage {
             }
             output.append(" ");
 
-            System.out.println(output);
+            //System.out.println("UPDATE: " + output.toString());
 
             // Write to the file
             FileWriter fileWriter = new FileWriter(outputFileName);
@@ -89,7 +90,7 @@ public class ProcessImage {
         processMaxColorValue(scanner);
 
         // \s
-        scanner.next(); // Skip over the white space character
+        //scanner.next(); // Skip over the white space character
     }
 
     private void processSeparator(Scanner scanner) {
@@ -101,24 +102,19 @@ public class ProcessImage {
         // Remember: + = one or more
 
         String currentCharacter = scanner.next();
-        System.out.println(currentCharacter);
-        System.out.println(scanner.next());
-        System.out.println(scanner.next());
-        System.out.println(scanner.next());
-        System.out.println(scanner.next());
 
         if(Pattern.matches("\\s+", currentCharacter)) {
-            System.out.println("Good, now we will go to the comment place.");
+            //System.out.println("Good, now we will go to the comment place.");
             processWhiteSpaceCharacter(scanner, currentCharacter); // Current Character is the whitespace character
             // currentCharacter is no longer a whitespace character, so we need to process the comment
             processComment(scanner);
         }
         else if (scanner.hasNext("#")){
-            System.out.println("looks like this is just a comment\n Here is the char " + currentCharacter);
+            //System.out.println("looks like this is just a comment\n Here is the char " + currentCharacter);
             processComment(scanner);
         }
         else {
-            System.out.println("none of these worked. Here is the characterr " + currentCharacter);
+            //System.out.println("none of these worked. Here is the character " + currentCharacter);
         }
     }
 
@@ -168,6 +164,9 @@ public class ProcessImage {
                     processPixel(scanner, row, col);
                 }
             }
+//            System.out.println("Red" + this.importedImageAsArray_m[0][0].getRed());
+//            System.out.println("Green" + this.importedImageAsArray_m[0][0].getGreen());
+//            System.out.println("Blue" + this.importedImageAsArray_m[0][0].getBlue());
         }
         catch(Exception e) {
             System.out.println("Failed to process all of the pixels");
@@ -182,16 +181,17 @@ public class ProcessImage {
 
         try {
             tempRedInt = Integer.parseInt(scanner.next());
+            //System.out.println(tempRedInt);
         }
         catch(NoSuchElementException ignored) {}
         try {
             tempGreenInt = Integer.parseInt(scanner.next());
-
+            //System.out.println(tempGreenInt);
         }
         catch(NoSuchElementException ignored) {}
         try {
             tempBlueInt = Integer.parseInt(scanner.next());
-
+            //System.out.println(tempBlueInt);
         }
         catch(NoSuchElementException ignored) {}
 
@@ -242,6 +242,21 @@ public class ProcessImage {
             scanner.useDelimiter("(\\s+)(#[^\\n]*\\n)?(\\s*)|(#[^\\n]*\\n)(\\s*)");
             //^^ Used to ignore Separators
 
+//            System.out.println("START");
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//            System.out.println(scanner.next());
+//
+//            System.out.println("STOP");
+
             //PPM_File ::= Header Pixels Separator*
             // Remember that * means zero or more times
             processHeader(scanner);
@@ -252,7 +267,7 @@ public class ProcessImage {
         }
         catch(Exception e) {
             System.out.println(e);
-            System.out.println("^^That is the one");
+            //System.out.println("^^That is the one");
         }
     }
 }
