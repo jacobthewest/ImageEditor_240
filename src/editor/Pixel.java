@@ -42,8 +42,12 @@ public class Pixel {
         this.blue_m = tempGrayscale;
     }
 
-    public void emboss() {
+    public void emboss(Pixel upperLeftPixel) {
+        // Work on the calculations with the upper left
+    }
 
+    public void emboss() {
+        // Treat the upperleft value as if it is zero?
     }
 
     public Pixel(int red, int green, int blue) {
