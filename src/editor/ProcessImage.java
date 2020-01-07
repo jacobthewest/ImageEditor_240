@@ -233,6 +233,32 @@ public class ProcessImage {
         return modifyThesePixels;
     }
 
+    public Pixel[][] grayscale (ProcessImage importedImage) {
+        int num_cols = importedImage.getWidth();
+        int num_rows = importedImage.getHeight();
+        Pixel[][] modifyThesePixels = importedImage.getPixelArray();
+
+        for(int row = 0; row < num_rows; row++) {
+            for(int col = 0; col < num_cols; col++) {
+                modifyThesePixels[row][col].grayscale();
+            }
+        }
+        return modifyThesePixels;
+    }
+
+    public Pixel[][] emobss (ProcessImage importedImage) {
+        int num_cols = importedImage.getWidth();
+        int num_rows = importedImage.getHeight();
+        Pixel[][] modifyThesePixels = importedImage.getPixelArray();
+
+        for(int row = 0; row < num_rows; row++) {
+            for(int col = 0; col < num_cols; col++) {
+                modifyThesePixels[row][col].emboss();
+            }
+        }
+        return modifyThesePixels;
+    }
+
     // Constructor
     ProcessImage(String inputFileName) {
         try {

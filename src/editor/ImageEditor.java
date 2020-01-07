@@ -23,7 +23,6 @@ public class ImageEditor {
 
             ProcessImage importedImage = new ProcessImage(INPUT_FILE_NAME);
 
-
             // What action wants to be performed
             switch(args[2].toUpperCase()) {
                 case "INVERT":
@@ -31,8 +30,12 @@ public class ImageEditor {
                     importedImage.writeToOutputFile(OUTPUT_FILE_NAME, importedImage, invertedPixelArray);
                     break;
                 case "GRAYSCALE":
+                    Pixel[][] grayscalePixelArray = importedImage.grayscale(importedImage);
+                    importedImage.writeToOutputFile(OUTPUT_FILE_NAME, importedImage, grayscalePixelArray);
                     break;
                 case "EMBOSS":
+                    Pixel[][] embossPixelArray = importedImage.emboss(importedImage);
+                    importedImage.writeToOutputFile(OUTPUT_FILE_NAME, importedImage, embossPixelArray);
                     break;
                 case "MOTIONBLUR":
                     break;

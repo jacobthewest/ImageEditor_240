@@ -33,9 +33,18 @@ public class Pixel {
         this.red_m = invertedRed;
         this.green_m = invertedGreen;
         this.blue_m = invertedBlue;
-
     }
 
+    public void grayscale() {
+        int tempGrayscale = (this.red_m + this.green_m + this.blue_m) / 3;
+        this.red_m = tempGrayscale;
+        this.green_m = tempGrayscale;
+        this.blue_m = tempGrayscale;
+    }
+
+    public void emboss() {
+
+    }
 
     public Pixel(int red, int green, int blue) {
         this.red_m = red;
