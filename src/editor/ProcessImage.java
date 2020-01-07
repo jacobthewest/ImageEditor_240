@@ -250,15 +250,28 @@ public class ProcessImage {
         int num_cols = importedImage.getWidth();
         int num_rows = importedImage.getHeight();
         Pixel[][] modifyThesePixels = importedImage.getPixelArray();
+        Pixel[][] originalPixels = importedImage.getPixelArray();
 
-        for(int row = 0; row < num_rows; row++) {
-            for(int col = 0; col < num_cols; col++) {
-                if ((row > 1) && (col > 1)) {
-                    Pixel upperLeftPixel = modifyThesePixels[row - 1][col - 1];
-                    modifyThesePixels[row][col].emboss(upperLeftPixel);
+        for(int row = num_rows - 1; row > -1; row--) {
+            for(int col = num_cols - 1; col > -1; col--) {
+                if ((row > 0) && (col > 0)) {
+                    if (
+                        originalPixels[row-1][col].getRed() < 0 ||
+                        originalPixels[row-1][col].getGreen() < 0 ||
+                        originalPixels[row-1][col].getBlue() < 0 ||
+                        originalPixels[row][col-1].getRed() < 0 ||
+                        originalPixels[row][col-1].getGreen() < 0 ||
+                        originalPixels[row][col-1].getBlue() < 0
+                    ) {
+                        originalPixels[row][col].set128();
+                    }
+                    else {
+                        Pixel upperLeftPixel = originalPixels[row - 1][col - 1];
+                        modifyThesePixels[row][col].emboss(upperLeftPixel);
+                    }
                 }
                 else {
-                    modifyThesePixels[row][col].emboss();
+                    modifyThesePixels[row][col].set128();
                 }
             }
         }
