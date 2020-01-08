@@ -96,13 +96,10 @@ public class Pixel {
         // newPixelValues = 128 + maxDifference
 
         int newPixelValues = 128 + maxDifference;
-//        if (useRedAbsDif) {
-//            newPixelValues = absRedDiff;
-//        }
 
-        // If needed, we then scale v to be between 0 and 255 by doing the following:
-            // If v < 0, then we set v to 0.
-            // If v > 255, then we set v to 255.
+        // If needed, we then scale newPixelValues to be between 0 and 255 by doing the following:
+            // If v < 0, then we set newPixelValues to 0.
+            // If v > 255, then we set newPixelValues to 255.
 
         if (newPixelValues < 0) {
             newPixelValues = 0;
@@ -129,5 +126,36 @@ public class Pixel {
         this.red_m = red;
         this.green_m = green;
         this.blue_m = blue;
+    }
+
+    public void motionBlur(Pixel[][] originalPixels, int originalRowIndex, int originalColIndex, int imageWidthInIndexPositions, int n) {
+        int redSum = 0;
+        int greenSum = 0;
+        int blueSum = 0;
+        int numIterations = 0;
+
+        // Get the sum of all of the colors
+        for (int currColIndex = originalColIndex; currColIndex < (originalColIndex + n); currColIndex++) {
+            if (currColIndex <= imageWidthInIndexPositions) {
+                int tempRed = originalPixels[originalRowIndex][currColIndex].getRed();
+                int tempGreen = originalPixels[originalRowIndex][currColIndex].getGreen();
+                int tempBlue = originalPixels[originalRowIndex][currColIndex].getBlue();
+
+                redSum += tempRed;
+                greenSum += tempGreen;
+                blueSum += tempBlue;
+                numIterations++;
+            }
+        }
+
+        // Calculate the averages of the color values
+        int avgRed = redSum / numIterations;
+        int avgGreen = greenSum / numIterations;
+        int avgBlue = blueSum / numIterations;
+
+        // Set the values of the Pixel object in focus
+        this.red_m = avgRed;
+        this.green_m = avgGreen;
+        this.blue_m = avgBlue;
     }
 }

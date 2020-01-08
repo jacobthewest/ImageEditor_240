@@ -38,13 +38,15 @@ public class ImageEditor {
                     importedImage.writeToOutputFile(OUTPUT_FILE_NAME, importedImage, embossPixelArray);
                     break;
                 case "MOTIONBLUR":
+                    int n = Integer.parseInt(args[3]);
+                    Pixel[][] motionBlurPixelArray = importedImage.motionBlur(importedImage, n);
+                    importedImage.writeToOutputFile(OUTPUT_FILE_NAME, importedImage, motionBlurPixelArray);
                     break;
                 default:
                     break;
             }
         }
         catch(Exception e) {
-            System.out.println("Jacob, ERROR: " + e);
             System.out.println("USAGE: java ImageEditor in-file out-file (grayscale|invert|emboss|motionblur motion-blur-length)");
         }
 	}
